@@ -34,14 +34,15 @@ public class ProductRepositoryImpl implements ProductRepository {
 
 	@Override
 	public List<Product> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "SELECT id, name, description, price, amount FROM product ";
+		return jdbcTemplate.query(sql, new ProdutoRowMapper());
 	}
 
 	@Override
-	public void update(Long id) {
-		// TODO Auto-generated method stub
-
+	public void update(Product product) {
+		String sql = "UPDATE product SET name = ?, description = ?, price = ?, amount = ? WHERE id = ? ";
+		jdbcTemplate.update(sql, product.getName(), product.getDescription(), product.getPrice(), product.getAmount(),
+				product.getId());
 	}
 
 	@Override
@@ -53,7 +54,8 @@ public class ProductRepositoryImpl implements ProductRepository {
 
 	@Override
 	public void delete(Long id) {
-		// TODO Auto-generated method stub
+		String sql = "SELECT FROM product WHERE id = ?";
+		jdbcTemplate.update(sql, id);
 
 	}
 

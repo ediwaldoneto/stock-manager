@@ -28,7 +28,7 @@ public interface ProductRepository {
 	/**
 	 * This is the method to be used to update a record into the Product table.
 	 */
-	public void update(final Long id);
+	public void update(final Product product);
 
 	/**
 	 * This is the method to use to create a record in the Product table
