@@ -1,19 +1,19 @@
 /**
  * 
  */
-package br.com.nt.stock.stockmanager.model;
+package br.com.nt.stock.stockmanager.dto.model;
 
 import java.math.BigDecimal;
 
 import org.modelmapper.ModelMapper;
 
-import br.com.nt.stock.stockmanager.dto.model.ProductDTO;
+import br.com.nt.stock.stockmanager.model.Product;
 
 /**
  * @author Neto
  *
  */
-public class Product {
+public class ProductDTO {
 
 	private Long id;
 	private String name;
@@ -92,11 +92,12 @@ public class Product {
 	}
 
 	/**
-	 * Method to convert an Product entity to a Product DTO.
+	 * Method to convert an Product DTO to a Product entity.
 	 * 
-	 * @return a <code>ProductDTO</code> object
+	 * @param dto
+	 * @return a <code>Product</code> object
 	 */
-	public ProductDTO convertEntityToDTO() {
-		return new ModelMapper().map(this, ProductDTO.class);
+	public Product convertDTOToEntity() {
+		return new ModelMapper().map(this, Product.class);
 	}
 }

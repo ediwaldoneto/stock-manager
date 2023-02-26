@@ -4,6 +4,7 @@
 package br.com.nt.stock.stockmanager.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import br.com.nt.stock.stockmanager.model.Product;
 
@@ -18,7 +19,7 @@ public interface ProductService {
 	 * @param id
 	 * @return user
 	 */
-	public Product findById(final Long id);
+	public Optional<Product> findById(final Long id);
 
 	/**
 	 * 
