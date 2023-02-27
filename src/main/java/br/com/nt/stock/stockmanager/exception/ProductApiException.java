@@ -3,6 +3,7 @@
  */
 package br.com.nt.stock.stockmanager.exception;
 
+import java.sql.SQLException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -50,6 +51,7 @@ public class ProductApiException<T> {
 	/**
 	 * 
 	 * @param exception
+	 * 
 	 * @return ResponseEntity<Response<T>>
 	 */
 	@ExceptionHandler(value = { MethodArgumentTypeMismatchException.class })
@@ -60,5 +62,19 @@ public class ProductApiException<T> {
 		response.addErrorToResponse(exception.getLocalizedMessage());
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	}
+
+	/**
+	 * @param exception
+	 * 
+	 * @return ResponseEntity<Response<T>>
+	 */
+	@ExceptionHandler(value = { SQLException.class })
+	protected ResponseEntity<Response<T>> handleAPISQLException(SQLException exception) {
+
+		Response<T> response = new Response<>();
+		response.addErrorToResponse(exception.getLocalizedMessage());
+
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 	}
 }
