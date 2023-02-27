@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nt.stock.stockmanager.dto.model.ProductDTO;
 import br.com.nt.stock.stockmanager.dto.reponse.Response;
+import br.com.nt.stock.stockmanager.exception.ProductNotFoundException;
 import br.com.nt.stock.stockmanager.model.Product;
 import br.com.nt.stock.stockmanager.service.ProductService;
 import jakarta.validation.Valid;
@@ -45,18 +46,21 @@ public class ProductController {
 	 * 409 - Conflict: The request conflicts with another request (perhaps due to using the same idempotent key).
 	 * 429 - Too Many Requests: Too many requests hit the API too quickly. We recommend an exponential back-off of your requests.
 	 * 500, 502, 503, 504 - Server Errors: something went wrong on API end (These are rare).
+     * @throws ProductNotFoundException 
      */
 	@GetMapping("/{id}")
-	public ResponseEntity<Response<ProductDTO>> findById(@PathVariable("id") final Long id) {
+	public ResponseEntity<Response<ProductDTO>> findById(@PathVariable("id") final Long id) throws ProductNotFoundException {
 
 		Response<ProductDTO> response = new Response<>();
 		Optional<Product> product = productService.findById(id);
 
-		if (product.isPresent()) {
-			ModelMapper modelMapper = new ModelMapper();
-			ProductDTO dto = modelMapper.map(product.get(), ProductDTO.class);
-			response.setData(dto);
+		if (!product.isPresent()) {
+			throw new ProductNotFoundException("no product found with that id");
 		}
+		
+		ModelMapper modelMapper = new ModelMapper();
+		ProductDTO dto = modelMapper.map(product.get(), ProductDTO.class);
+		response.setData(dto);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 
 	}
