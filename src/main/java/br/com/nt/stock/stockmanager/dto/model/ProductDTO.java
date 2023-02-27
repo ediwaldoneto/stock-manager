@@ -5,9 +5,13 @@ package br.com.nt.stock.stockmanager.dto.model;
 
 import java.math.BigDecimal;
 
+import org.hibernate.validator.constraints.Length;
 import org.modelmapper.ModelMapper;
 
 import br.com.nt.stock.stockmanager.model.Product;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 /**
  * @author Neto
@@ -16,9 +20,16 @@ import br.com.nt.stock.stockmanager.model.Product;
 public class ProductDTO {
 
 	private Long id;
+	@NotNull(message = "Name cannot be null.")
+	@Length(min = 3, max = 255, message = "Name must contain between 3 and 255 characters.")
 	private String name;
+	@NotNull(message = "Description cannot be null.")
 	private String description;
+	@NotNull(message = "Price cannot be null.")
+	@DecimalMin(value = "0.01", message = "Price must be greater than or equal to 0.01")
 	private BigDecimal price;
+	@NotNull(message = "Amount cannot be null.")
+	@PositiveOrZero(message = "Quantity must be greater than or equal to 0")
 	private int amount;
 
 	/**

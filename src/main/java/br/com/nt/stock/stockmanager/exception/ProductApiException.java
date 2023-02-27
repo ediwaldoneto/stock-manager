@@ -17,6 +17,11 @@ import br.com.nt.stock.stockmanager.dto.reponse.Response;
 @ControllerAdvice
 public class ProductApiException<T> {
 
+	/**
+	 * 
+	 * @param exception
+	 * @return ResponseEntity<Response<T>>
+	 */
 	@ExceptionHandler(value = { ProductNotFoundException.class })
 	protected ResponseEntity<Response<T>> handleTravelNotFoundException(ProductNotFoundException exception) {
 

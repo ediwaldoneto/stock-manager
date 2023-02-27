@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,7 +46,7 @@ public class ProductController {
 	 * 404 - Not Found: The requested resource doesn't exist.
 	 * 409 - Conflict: The request conflicts with another request (perhaps due to using the same idempotent key).
 	 * 429 - Too Many Requests: Too many requests hit the API too quickly. We recommend an exponential back-off of your requests.
-	 * 500, 502, 503, 504 - Server Errors: something went wrong on API end (These are rare).
+	 * 500, 502, 503, 504 - Server Errors: something went wrong on API end.
      * @throws ProductNotFoundException 
      */
 	@GetMapping("/{id}")
@@ -55,7 +56,7 @@ public class ProductController {
 		Optional<Product> product = productService.findById(id);
 
 		if (!product.isPresent()) {
-			throw new ProductNotFoundException("no product found with that id");
+			throw new ProductNotFoundException("no match found for id");
 		}
 		
 		ModelMapper modelMapper = new ModelMapper();
@@ -75,12 +76,17 @@ public class ProductController {
 	 * 404 - Not Found: The requested resource doesn't exist.
 	 * 409 - Confli* 201 - Created: Everything worked as expected.ct: The request conflicts with another request (perhaps due to using the same idempotent key).
 	 * 429 - Too Many Requests: Too many requests hit the API too quickly. We recommend an exponential back-off of your requests.
-	 * 500, 502, 503, 504 - Server Errors: something went wrong on API end (These are rare).
+	 * 500, 502, 503, 504 - Server Errors: something went wrong on API end.
 	 */
 	@PostMapping
-	public ResponseEntity<Response<ProductDTO>> create(@RequestBody @Valid final ProductDTO dto){
+	public ResponseEntity<Response<ProductDTO>> create(@RequestBody @Valid final ProductDTO dto,  BindingResult result){
 		
 		Response<ProductDTO> response = new Response<>();
+		
+		if (result.hasErrors()) {
+			result.getAllErrors().forEach(error -> response.addErrorToResponse(error.getDefaultMessage()));
+			return ResponseEntity.badRequest().body(response);
+		}
 		
 		Product product = dto.convertDTOToEntity();
 		productService.save(product);
