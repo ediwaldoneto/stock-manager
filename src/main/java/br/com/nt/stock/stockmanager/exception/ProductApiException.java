@@ -24,7 +24,7 @@ public class ProductApiException<T> {
 	 * @return ResponseEntity<Response<T>>
 	 */
 	@ExceptionHandler(value = { ProductNotFoundException.class })
-	protected ResponseEntity<Response<T>> handleProductNotNotFoundException(ProductNotFoundException exception) {
+	protected ResponseEntity<Response<T>> handleProductNotFoundException(ProductNotFoundException exception) {
 
 		Response<T> response = new Response<>();
 		response.addErrorToResponse(exception.getLocalizedMessage());
